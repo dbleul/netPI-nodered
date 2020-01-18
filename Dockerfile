@@ -160,7 +160,7 @@ RUN cd /usr/lib/ \
 # -------------------- Do all necessary copies --------------------
 
 #--------------------- Install State machine Node -------------------
-RUN npm install -g node-red-contrib-finite-statemachine
+RUN npm install -g node-red-contrib-finite-statemachine@0.2.10
 
 #--------------------- Install RPi GPIO Node ------------------------
 RUN npm install -g node-red-node-pi-gpio
