@@ -49,7 +49,7 @@ trap 'kill ${!}; term_handler' SIGINT SIGKILL SIGTERM SIGQUIT SIGTSTP SIGSTOP SI
 #check presence of device spi0.0 and net device register
 if [[ -e "/dev/spidev0.0" ]]&& [[ -e "/dev/net/tun" ]]; then
 
-  echo "cifx0 hardware support (TCP/IP over RTE LAN ports) configured." 
+  echo "cifx0 hardware support (TCP/IP over RTE LAN ports) configured."
 
   #pre-configure GPIO 24 to serve as interrupt pin between netX chip and BCM CPU
   echo 24 > /sys/class/gpio/export
@@ -57,14 +57,14 @@ if [[ -e "/dev/spidev0.0" ]]&& [[ -e "/dev/net/tun" ]]; then
   echo in > /sys/class/gpio/gpio24/direction
   echo 1 > /sys/class/gpio/gpio24/active_low
 
-  # create netx "cifx0" ethernet network interface 
+  # create netx "cifx0" ethernet network interface
   /opt/cifx/cifx0daemon
 
   # bring interface up first of all
   ip link set cifx0 up
 
 else
-  echo "cifx0 hardware support (TCP/IP over RTE LAN ports) not configured. Container stopped." 
+  echo "cifx0 hardware support (TCP/IP over RTE LAN ports) not configured. Container stopped."
   exit 143
 fi
 
@@ -132,33 +132,26 @@ httpUrl='https://127.0.0.1/getLandingPageStructure'
 rep=$(curl -k -s $httpUrl)
 
 if [[ $rep == *'model-name'* ]]; then
-  sed -i -e 's+//adminAuth: {+adminAuth: require("./user-authentication.js"),\n    //adminAuth: {+' /usr/lib/$
+  sed -i -e 's+//adminAuth: {+adminAuth: require("./user-authentication.js"),\n    //adminAuth: {+' /usr/lib/node_modules/node-red/settings.js
 else
-  sed -i -e 's+adminAuth: require("./user-authentication.js"),\n    //adminAuth: {+//adminAuth: {+' /usr/lib/$
+  sed -i -e 's+adminAuth: require("./user-authentication.js"),\n    //adminAuth: {+//adminAuth: {+' /usr/lib/node_modules/node-red/settings.js
 fi
 
-if [ "$USER_MANAGEMENT" == "no" ]; then
-  sed -i -e 's+adminAuth: require("./user-authentication.js"),\n    //adminAuth: {+//adminAuth: {+' /usr/lib/$
+if [ "$USER_MANAGEMENT" == "no" ] then
+  echo "No User Management Configuration found!"
+  sed -i -e 's+adminAuth: require("./user-authentication.js"),\n    //adminAuth: {+//adminAuth: {+' /usr/lib/node_modules/node-red/settings.js
 fi
 
 #check 4DI4DO, NPIX-LEDs, USER-LEDs nodes support
-if [[ -e "/dev/gpiomem" ]]; then
-  echo "Precondition for node-red-contrib-user-leds node(s) met. Installing node(s)."
-  ln -s -f /usr/lib/node_modules_tmp/node-red-contrib-user-leds /usr/lib/node_modules/node-red-contrib-user-l$
-  echo "Precondition for node-red-contrib-npix-leds node(s) met. Installing node(s)."
-  ln -s -f /usr/lib/node_modules_tmp/node-red-contrib-npix-leds /usr/lib/node_modules/node-red-contrib-npix-l$
-else
-  rm -f /usr/lib/node_modules/node-red-contrib-user-leds
-  rm -f /usr/lib/node_modules/node-red-contrib-npix-leds
-fi
-
-#check FRAM, 4AI16U, CAN nodes support
-if [[ -e "/dev/i2c-1" ]]; then
-  echo "Precondition for node-red-contrib-fram node(s) met. Installing node(s)."
-  ln -s -f /usr/lib/node_modules_tmp/node-red-contrib-fram /usr/lib/node_modules/node-red-contrib-fram
-else
-  rm -f /usr/lib/node_modules/node-red-contrib-fram
-fi
+#if [[ -e "/dev/gpiomem" ]]; then
+#  echo "Precondition for node-red-contrib-user-leds node(s) met. Installing node(s)."
+#  ln -s -f /usr/lib/node_modules_tmp/node-red-contrib-user-leds /usr/lib/node_modules/node-red-contrib-user-l$
+#  echo "Precondition for node-red-contrib-npix-leds node(s) met. Installing node(s)."
+#  ln -s -f /usr/lib/node_modules_tmp/node-red-contrib-npix-leds /usr/lib/node_modules/node-red-contrib-npix-l$
+#else
+#  rm -f /usr/lib/node_modules/node-red-contrib-user-leds
+#  rm -f /usr/lib/node_modules/node-red-contrib-npix-leds
+#fi
 
 #check serial port node support
 #if [[ -e "/dev/ttyS0" ]]; then
