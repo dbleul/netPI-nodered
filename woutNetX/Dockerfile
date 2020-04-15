@@ -42,7 +42,7 @@ RUN apt-get update  \
 RUN apt-get update && apt-get install build-essential python-dev python-pip python-setuptools \
  && curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -  \
  && apt-get install -y nodejs  \
- && npm install -g --unsafe-perm node-red@1.0.5 \
+ && npm install --unsafe-perm node-red@1.0.5 \
  && npm config set package-lock false \
 #configure user login & https security
  && sed -i -e 's+//var fs = require("fs");+var fs = require("fs");+' /usr/lib/node_modules/node-red/settings.js \
@@ -62,17 +62,23 @@ RUN pip install wheel \
  && pip install RPi.GPIO \
  && mkdir /usr/lib/node_modules_tmp
 # -------------------- Install Modbus nodes and all dependencies --------------------
-RUN npm install --unsafe-perm node-red-contrib-modbus@5.10.1
+RUN cd /usr/lib/ \
+&& npm install --unsafe-perm node-red-contrib-modbus@5.10.1
 # -------------------- Install Dashboard nodes and all dependencies -----------------
-RUN npm install --unsafe-perm node-red-dashboard@2.20.0
+RUN cd /usr/lib/ \
+&& npm install --unsafe-perm node-red-dashboard@2.20.0
 # -------------------- Install OPC UA nodes and all dependencies --------------------
-RUN npm install --unsafe-perm node-red-contrib-iiot-opcua@3.12.0
+RUN cd /usr/lib/ \
+&& npm install --unsafe-perm node-red-contrib-iiot-opcua@3.12.0
 # -------------------- Install MSSQL database node and all dependencies --------------------
-RUN npm install --unsafe-perm node-red-contrib-mssql-plus@0.4.0
+RUN cd /usr/lib/ \
+&& npm install --unsafe-perm node-red-contrib-mssql-plus@0.4.0
 # -------------------- Install PostgresSQL database node and all dependencies --------------------
-RUN npm install --unsafe-perm node-red-contrib-postgres-variable@0.1.4
+RUN cd /usr/lib/ \
+&& npm install --unsafe-perm node-red-contrib-postgres-variable@0.1.4
 # -------------------- Install SMB file access node and all dependencies --------------------
-RUN npm install --unsafe-perm node-red-contrib-smb@1.1.1
+RUN cd /usr/lib/ \
+&& npm install --unsafe-perm node-red-contrib-smb@1.1.1
 # -------------------- Install S7 communication nodes and all dependencies --------------------
 RUN cd /usr/lib/ \
  && npm install node-red-contrib-s7comm@1.1.6 \
@@ -83,13 +89,18 @@ RUN cd /usr/lib/ \
  && npm install --unsafe-perm node-red-node-serialport@0.10.1
 
 #--------------------- Install State machine Node -------------------
-RUN npm install node-red-contrib-finite-statemachine@0.2.10
+RUN cd /usr/lib/ \
+&& npm install node-red-contrib-finite-statemachine@0.2.10
 
 #--------------------- Install RPi GPIO Node ------------------------
-RUN npm install node-red-node-pi-gpio
+RUN cd /usr/lib/ \
+&& npm install node-red-node-pi-gpio
 
 #copy files
 COPY "./init.d/*" /etc/init.d/
+
+RUN chmod 777 /etc/init.d/entrypoint.sh \
+&& chmod +x /etc/init.d/entrypoint.sh
 
 #set the entrypoint
 ENTRYPOINT ["/etc/init.d/entrypoint.sh"]
