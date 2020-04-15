@@ -50,7 +50,7 @@ RUN apt-get update && apt-get install build-essential python-dev python-pip pyth
  && sed -i -e "s+//    cert: fs.readFileSync('certificate.pem')+cert: fs.readFileSync('/root/.node-red-certs/node-cert.pem')\n    },+" /usr/lib/node_modules/node-red/settings.js \
  && sed -i -e "s+//requireHttps: true,+requireHttps: true,+" /usr/lib/node_modules/node-red/settings.js \
  && mkdir -p /root/.node-red/node_modules \
- && cd /root/.node-red \
+ && cd /usr/lib/ \
  && npm install when request \
  && mkdir -p /root/.node-red-certs \
  && cd /root/.node-red-certs \
