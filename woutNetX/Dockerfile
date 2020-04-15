@@ -46,14 +46,14 @@ RUN apt-get update && apt-get install build-essential python-dev python-pip pyth
  && npm config set package-lock false \
 #configure user login & https security
  && sed -i -e 's+//var fs = require("fs");+var fs = require("fs");+' /usr/lib/node_modules/node-red/settings.js \
- && sed -i -e "s+//    key: fs.readFileSync('privatekey.pem'),+https: {\n    key: fs.readFileSync('/root/.node-red/certs/node-key.pem'),+" /usr/lib/node_modules/node-red/settings.js \
- && sed -i -e "s+//    cert: fs.readFileSync('certificate.pem')+cert: fs.readFileSync('/root/.node-red/certs/node-cert.pem')\n    },+" /usr/lib/node_modules/node-red/settings.js \
+ && sed -i -e "s+//    key: fs.readFileSync('privatekey.pem'),+https: {\n    key: fs.readFileSync('/root/.node-red-certs/node-key.pem'),+" /usr/lib/node_modules/node-red/settings.js \
+ && sed -i -e "s+//    cert: fs.readFileSync('certificate.pem')+cert: fs.readFileSync('/root/.node-red-certs/node-cert.pem')\n    },+" /usr/lib/node_modules/node-red/settings.js \
  && sed -i -e "s+//requireHttps: true,+requireHttps: true,+" /usr/lib/node_modules/node-red/settings.js \
  && mkdir -p /root/.node-red/node_modules \
  && cd /root/.node-red \
  && npm install when request \
- && mkdir -p /root/.node-red/certs \
- && cd /root/.node-red/certs \
+ && mkdir -p /root/.node-red-certs \
+ && cd /root/.node-red-certs \
  && openssl genrsa -out ./node-key.pem 2048 \
  && openssl req -new -sha256 -key ./node-key.pem -out ./node-csr.pem -subj "/C=DE/ST=Hessen/L=Hattersheim/O=Hilscher/OU=Hilscher/CN=myown/emailAddress=myown@hilscher.com" \
  && openssl x509 -req -in ./node-csr.pem -signkey ./node-key.pem -out ./node-cert.pem
@@ -62,31 +62,31 @@ RUN pip install wheel \
  && pip install RPi.GPIO \
  && mkdir /usr/lib/node_modules_tmp
 # -------------------- Install Modbus nodes and all dependencies --------------------
-RUN npm install -g --unsafe-perm node-red-contrib-modbus@5.10.1
+RUN npm install --unsafe-perm node-red-contrib-modbus@5.10.1
 # -------------------- Install Dashboard nodes and all dependencies -----------------
-RUN npm install -g --unsafe-perm node-red-dashboard@2.20.0
+RUN npm install --unsafe-perm node-red-dashboard@2.20.0
 # -------------------- Install OPC UA nodes and all dependencies --------------------
-RUN npm install -g --unsafe-perm node-red-contrib-iiot-opcua@3.12.0
+RUN npm install --unsafe-perm node-red-contrib-iiot-opcua@3.12.0
 # -------------------- Install MSSQL database node and all dependencies --------------------
-RUN npm install -g --unsafe-perm node-red-contrib-mssql-plus@0.4.0
+RUN npm install --unsafe-perm node-red-contrib-mssql-plus@0.4.0
 # -------------------- Install PostgresSQL database node and all dependencies --------------------
-RUN npm install -g --unsafe-perm node-red-contrib-postgres-variable@0.1.4
+RUN npm install --unsafe-perm node-red-contrib-postgres-variable@0.1.4
 # -------------------- Install SMB file access node and all dependencies --------------------
-RUN npm install -g --unsafe-perm node-red-contrib-smb@1.1.1
+RUN npm install --unsafe-perm node-red-contrib-smb@1.1.1
 # -------------------- Install S7 communication nodes and all dependencies --------------------
 RUN cd /usr/lib/ \
- && npm install -g node-red-contrib-s7comm@1.1.6 \
+ && npm install node-red-contrib-s7comm@1.1.6 \
  && cd /usr/lib/node_modules/node-red-contrib-s7comm/node_modules \
- && npm install -g --unsafe-perm net-keepalive@1.2.1
+ && npm install --unsafe-perm net-keepalive@1.2.1
 # -------------------- Install serial port node and all dependencies --------------------
 RUN cd /usr/lib/ \
- && npm install -g --unsafe-perm node-red-node-serialport@0.10.1
+ && npm install --unsafe-perm node-red-node-serialport@0.10.1
 
 #--------------------- Install State machine Node -------------------
-RUN npm install -g node-red-contrib-finite-statemachine@0.2.10
+RUN npm install node-red-contrib-finite-statemachine@0.2.10
 
 #--------------------- Install RPi GPIO Node ------------------------
-RUN npm install -g node-red-node-pi-gpio
+RUN npm install node-red-node-pi-gpio
 
 #copy files
 COPY "./init.d/*" /etc/init.d/
