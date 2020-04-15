@@ -45,18 +45,18 @@ RUN apt-get update && apt-get install build-essential python-dev python-pip pyth
  && npm install --unsafe-perm node-red@1.0.5 \
  && npm config set package-lock false \
 #configure user login & https security
- && sed -i -e 's+//var fs = require("fs");+var fs = require("fs");+' /usr/lib/node_modules/node-red/settings.js \
- && sed -i -e "s+//    key: fs.readFileSync('privatekey.pem'),+https: {\n    key: fs.readFileSync('/root/.node-red-certs/node-key.pem'),+" /usr/lib/node_modules/node-red/settings.js \
- && sed -i -e "s+//    cert: fs.readFileSync('certificate.pem')+cert: fs.readFileSync('/root/.node-red-certs/node-cert.pem')\n    },+" /usr/lib/node_modules/node-red/settings.js \
- && sed -i -e "s+//requireHttps: true,+requireHttps: true,+" /usr/lib/node_modules/node-red/settings.js \
- && mkdir -p /root/.node-red/node_modules \
- && cd /usr/lib/ \
- && npm install when request \
- && mkdir -p /root/.node-red-certs \
- && cd /root/.node-red-certs \
- && openssl genrsa -out ./node-key.pem 2048 \
- && openssl req -new -sha256 -key ./node-key.pem -out ./node-csr.pem -subj "/C=DE/ST=Hessen/L=Hattersheim/O=Hilscher/OU=Hilscher/CN=myown/emailAddress=myown@hilscher.com" \
- && openssl x509 -req -in ./node-csr.pem -signkey ./node-key.pem -out ./node-cert.pem
+# && sed -i -e 's+//var fs = require("fs");+var fs = require("fs");+' /usr/lib/node_modules/node-red/settings.js \
+# && sed -i -e "s+//    key: fs.readFileSync('privatekey.pem'),+https: {\n    key: fs.readFileSync('/root/.node-red-certs/node-key.pem'),+" /usr/lib/node_modules/node-red/settings.js \
+# && sed -i -e "s+//    cert: fs.readFileSync('certificate.pem')+cert: fs.readFileSync('/root/.node-red-certs/node-cert.pem')\n    },+" /usr/lib/node_modules/node-red/settings.js \
+# && sed -i -e "s+//requireHttps: true,+requireHttps: true,+" /usr/lib/node_modules/node-red/settings.js \
+ && mkdir -p /root/.node-red/node_modules 
+# && cd /usr/lib/ \
+# && npm install when request \
+# && mkdir -p /root/.node-red-certs \
+# && cd /root/.node-red-certs \
+# && openssl genrsa -out ./node-key.pem 2048 \
+# && openssl req -new -sha256 -key ./node-key.pem -out ./node-csr.pem -subj "/C=DE/ST=Hessen/L=Hattersheim/O=Hilscher/OU=Hilscher/CN=myown/emailAddress=myown@hilscher.com" \
+# && openssl x509 -req -in ./node-csr.pem -signkey ./node-key.pem -out ./node-cert.pem
 # -------------------- Install GPIO python lib --------------------------------------
 RUN pip install wheel \
  && pip install RPi.GPIO \
