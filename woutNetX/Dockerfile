@@ -42,6 +42,7 @@ RUN apt-get update  \
 RUN apt-get update && apt-get install build-essential python-dev python-pip python-setuptools \
  && curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -  \
  && apt-get install -y nodejs  \
+ && cd /usr/lib/ \
  && npm install --unsafe-perm node-red@1.0.5 \
  && npm config set package-lock false \
 #configure user login & https security
